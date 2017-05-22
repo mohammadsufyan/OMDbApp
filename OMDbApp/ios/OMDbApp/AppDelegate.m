@@ -11,12 +11,22 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
 
 @implementation AppDelegate
+
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+	[FBSDKAppEvents activateApp];
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
+	
+	[[FBSDKApplicationDelegate sharedInstance] application:application
+													 didFinishLaunchingWithOptions:launchOptions];
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
 
@@ -29,9 +39,27 @@
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
+	
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+	FBSDKLoginButton *loginButton = [[FBSDKLoginButton alloc] init];
+	loginButton.center = rootViewController.view.center;
+	[rootViewController.view addSubview:loginButton];
   return YES;
+}
+
+- (BOOL)application:(UIApplication *)application
+						openURL:(NSURL *)url
+	sourceApplication:(NSString *)sourceApplication
+				 annotation:(id)annotation {
+	
+	BOOL handled = [[FBSDKApplicationDelegate sharedInstance] application:application
+																																openURL:url
+																											sourceApplication:sourceApplication
+																														 annotation:annotation
+									];
+	// Add any custom logic here.
+	return handled;
 }
 
 @end
