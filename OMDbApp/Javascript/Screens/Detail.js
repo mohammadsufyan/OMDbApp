@@ -79,7 +79,7 @@ export default class Detail extends Component{
         if (data.length === 2) {
           mediaData = [];
         } else {
-          mediaData = JSON.parse(value);
+          mediaData = JSON.parse(data);
         }
         mediaData.push(this.state.data);
         const savingData = JSON.stringify(mediaData);
